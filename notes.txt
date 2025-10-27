@@ -1,0 +1,7 @@
+
+#Scaffold database with EFC
+Scaffold-DbContext 'Server=localhost\sqlexpress; Database=BookStoreDb; Trusted_Connection=True; MultipleActiveResultSets=true; TrustServerCertificate=True' Microsoft.EntityFrameworkCore.SqlServer -ContextDir Data -OutputDir Data
+
+Provider: Microsoft.EntityFrameworkCore.SqlServer
+ContextDir: where to place the DbContext class
+OutputDir: where to place the entity classes
