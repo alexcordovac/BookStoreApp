@@ -14,7 +14,7 @@ namespace BookStoreApp.API.Endpoints
 
         public static IEndpointRouteBuilder MapAuthorEndpoints(this IEndpointRouteBuilder endpointBuilder)
         {
-            var group = endpointBuilder.MapGroup("/authors");
+            var group = endpointBuilder.MapGroup("/authors").WithTags("Authors");
 
 
             group.MapGet("{id:int}", async Task<IResult> (int id, HttpContext context, IAuthorsRepository authorsRepository, ILogger<AuthorApi> logger) =>
