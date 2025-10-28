@@ -5,6 +5,7 @@ using BookStoreApp.API.Endpoints;
 using BookStoreApp.API.Options;
 using BookStoreApp.API.Repositories;
 using BookStoreApp.API.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
@@ -16,8 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("BookStoreDbConnection");
 builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection(StorageOptions.Storage));
 
-
 builder.Services.AddDbContext<BookStoreDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddIdentityCore<ApiUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<BookStoreDbContext>();
+
 builder.Services.AddTransient<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddTransient<IBooksRepository, BooksRepository>();
 builder.Services.AddTransient<IFileService, FileService>();
