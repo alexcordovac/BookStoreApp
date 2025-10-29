@@ -5,17 +5,21 @@ using BookStoreApp.API.Endpoints;
 using BookStoreApp.API.Options;
 using BookStoreApp.API.Repositories;
 using BookStoreApp.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("BookStoreDbConnection");
 builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection(StorageOptions.Storage));
+builder.Services.Configure<JwtSettingsOptions>(builder.Configuration.GetSection(JwtSettingsOptions.JwtSettings));
 
 builder.Services.AddDbContext<BookStoreDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentityCore<ApiUser>()
@@ -25,6 +29,7 @@ builder.Services.AddIdentityCore<ApiUser>()
 builder.Services.AddTransient<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddTransient<IBooksRepository, BooksRepository>();
 builder.Services.AddTransient<IFileService, FileService>();
+builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddAutoMapper(cfg => { cfg.LicenseKey = builder.Configuration["LuckyPennyLicense"]; }, typeof(MapperConfig));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -50,12 +55,34 @@ builder.Services.AddCors(options =>
 //    });
 builder.Services.AddAuthorization();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+        };
+    });
+
+
 
 var app = builder.Build();
 
 var apiV1Group = app.MapGroup("/api/v1");
 apiV1Group.MapAuthorEndpoints();
 apiV1Group.MapBooksEndpoints();
+apiV1Group.MapAuthenticationEndpoints();
 
 // Static files
 var storageOptions = app.Services.GetRequiredService<IOptions<StorageOptions>>().Value;
