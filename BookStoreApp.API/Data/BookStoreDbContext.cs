@@ -75,7 +75,7 @@ public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
                 NormalizedUserName = "ADMIN@BOOKSTORE.COM",
                 FirstName = "System",
                 LastName = "Administrator",
-                PasswordHash = "AQAAAAIAAYagAAAAEC5ZP4FxG2S41Y8uJq+5mfbM7HzpJQ0U3cHtR3G8ZlwTgAhRzoh9SlnQ3vQJcVb/xg==",//12345
+                PasswordHash = "AQAAAAIAAYagAAAAEAuyFsll6VYAeMEaVLQTenqT+u0SQpXWrdksYDexdoqVucArAURL7RG2IJ1gdMongA==",//12345
                 SecurityStamp = "019a2c8f-fd1c-7b4e-b452-19fcc6e79d63",
                 ConcurrencyStamp = "019a2c94-4b3c-79d5-8e39-750e62e5b36e"
             },
@@ -88,7 +88,7 @@ public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
                 NormalizedUserName = "USER@BOOKSTORE.COM",
                 FirstName = "System",
                 LastName = "User",
-                PasswordHash = "AQAAAAIAAYagAAAAEC5ZP4FxG2S41Y8uJq+5mfbM7HzpJQ0U3cHtR3G8ZlwTgAhRzoh9SlnQ3vQJcVb/xg==",//12345
+                PasswordHash = "AQAAAAIAAYagAAAAEAuyFsll6VYAeMEaVLQTenqT+u0SQpXWrdksYDexdoqVucArAURL7RG2IJ1gdMongA==",//12345
                 SecurityStamp = "019a2c90-1cbb-7452-907e-4e85502bcc51",
                 ConcurrencyStamp = "019a2c94-7929-75f7-a585-b0fe0ea4737d"
             }
