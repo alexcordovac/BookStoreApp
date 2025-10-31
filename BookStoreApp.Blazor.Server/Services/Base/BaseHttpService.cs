@@ -1,8 +1,7 @@
 ﻿using Blazored.LocalStorage;
-using BookStoreApp.Blazor.Server.Services.Base;
 using System.Net.Http.Headers;
 
-namespace BookStoreApp.Blazor.Server.UI.Services.Base
+namespace BookStoreApp.Blazor.Server.Services.Base
 {
     public class BaseHttpService
     {

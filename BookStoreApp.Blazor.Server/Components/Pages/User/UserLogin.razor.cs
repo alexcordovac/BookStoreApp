@@ -9,8 +9,9 @@ namespace BookStoreApp.Blazor.Server.Components.Pages.User
         [Inject] IAuthenticationService authService { get; set; }
         [Inject] NavigationManager navManager { get; set; }
 
-        LoginUserDto LoginModel = new LoginUserDto();
-        string message = string.Empty;
+        //[SupplyParameterFromForm]
+        LoginUserDto LoginModel { get; set; } = new LoginUserDto();
+        string ErrorMessage;
 
         public async Task HandleLogin()
         {
@@ -21,7 +22,7 @@ namespace BookStoreApp.Blazor.Server.Components.Pages.User
                 navManager.NavigateTo("/");
             }
 
-            message = response.Message;
+            ErrorMessage = response.Message;
         }
     }
 }

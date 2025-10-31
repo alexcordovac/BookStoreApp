@@ -1,4 +1,4 @@
-﻿namespace BookStoreApp.Blazor.Server.UI.Services.Base
+﻿namespace BookStoreApp.Blazor.Server.Services.Base
 {
     public class Response<T>
     {
