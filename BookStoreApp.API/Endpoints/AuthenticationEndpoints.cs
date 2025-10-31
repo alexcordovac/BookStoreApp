@@ -77,6 +77,7 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
+            .Produces<AuthResponse>(StatusCodes.Status200OK)
             .WithOpenApi();
 
 
