@@ -47,7 +47,7 @@ namespace BookStoreApp.API.Endpoints
 
 
 
-            group.MapPost("login", async Task<IResult> (UserDto userDto, UserManager<ApiUser> userManager, JwtTokenService tokenService, ILogger<AuthenticationApi> logger, HttpContext context) =>
+            group.MapPost("login", async Task<IResult> (LoginUserDto userDto, UserManager<ApiUser> userManager, JwtTokenService tokenService, ILogger<AuthenticationApi> logger, HttpContext context) =>
             {
                 logger.LogInformation($"Login Attempt for {userDto.Email} ");
                 try
