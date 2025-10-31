@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using BookStoreApp.Blazor.Server.Components;
 using BookStoreApp.Blazor.Server.Services.Base;
 
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddHttpClient<IClient, Client >(client =>
 {

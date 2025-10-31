@@ -38,12 +38,12 @@ namespace BookStoreApp.Blazor.Server.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Void> LoginAsync(UserDto body);
+        System.Threading.Tasks.Task<AuthResponse> LoginAsync(LoginUserDto body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Void> LoginAsync(UserDto body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<AuthResponse> LoginAsync(LoginUserDto body, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -265,7 +265,7 @@ namespace BookStoreApp.Blazor.Server.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<Void> LoginAsync(UserDto body)
+        public virtual System.Threading.Tasks.Task<AuthResponse> LoginAsync(LoginUserDto body)
         {
             return LoginAsync(body, System.Threading.CancellationToken.None);
         }
@@ -273,7 +273,7 @@ namespace BookStoreApp.Blazor.Server.Services.Base
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<Void> LoginAsync(UserDto body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<AuthResponse> LoginAsync(LoginUserDto body, System.Threading.CancellationToken cancellationToken)
         {
             if (body == null)
                 throw new System.ArgumentNullException("body");
@@ -321,7 +321,7 @@ namespace BookStoreApp.Blazor.Server.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<Void>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<AuthResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1417,6 +1417,21 @@ namespace BookStoreApp.Blazor.Server.Services.Base
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.1.0 (NJsonSchema v11.5.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class AuthResponse
+    {
+
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string UserId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Token { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Email { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.1.0 (NJsonSchema v11.5.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class AuthorCreateDto
     {
 
@@ -1536,6 +1551,20 @@ namespace BookStoreApp.Blazor.Server.Services.Base
         [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, 2147483647D)]
         public double Price { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.1.0 (NJsonSchema v11.5.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class LoginUserDto
+    {
+
+        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Email { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Password { get; set; }
 
     }
 
