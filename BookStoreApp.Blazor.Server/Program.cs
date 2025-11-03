@@ -35,6 +35,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
 
 
 app.UseAntiforgery();
