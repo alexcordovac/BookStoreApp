@@ -36,6 +36,8 @@ namespace BookStoreApp.API.Endpoints
                 }
             })
             .WithName("getAuthorById")
+            .Produces<AuthorDetailsDto>(StatusCodes.Status200OK)
+            .RequireAuthorization()
             .WithOpenApi();
 
 
@@ -52,13 +54,15 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
-           .WithOpenApi();
+            .Produces<VirtualizeResponse<AuthorReadOnlyDto>>(StatusCodes.Status200OK)
+            .RequireAuthorization()
+            .WithOpenApi();
 
 
-            group.MapPut("{id:int}", async Task<IResult> (int id, AuthorUpdateDto authorDto, 
-                HttpContext context, 
-                IAuthorsRepository authorsRepository, 
-                IMapper _mapper, 
+            group.MapPut("{id:int}", async Task<IResult> (int id, AuthorUpdateDto authorDto,
+                HttpContext context,
+                IAuthorsRepository authorsRepository,
+                IMapper _mapper,
                 ILogger<AuthorApi> logger) =>
             {
                 if (id != authorDto.Id)
@@ -96,7 +100,9 @@ namespace BookStoreApp.API.Endpoints
 
                 return TypedResults.NoContent();
             })
-           .WithOpenApi();
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuthorization()
+            .WithOpenApi();
 
 
 
@@ -115,6 +121,8 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
+           .Produces<Author>(StatusCodes.Status201Created)
+           .RequireAuthorization()
            .WithOpenApi();
 
 
@@ -140,6 +148,7 @@ namespace BookStoreApp.API.Endpoints
                 }
             })
            .RequireAuthorization(new AuthorizeAttribute { Roles = "Administrator" })
+           .Produces(StatusCodes.Status204NoContent)
            .WithOpenApi();
 
 

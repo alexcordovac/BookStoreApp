@@ -38,6 +38,8 @@ namespace BookStoreApp.API.Endpoints
                 }
             })
             .WithName("getBookById")
+            .Produces<BookDetailsDto>(StatusCodes.Status200OK)
+            .RequireAuthorization()
             .WithOpenApi();
 
 
@@ -54,7 +56,9 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
-           .WithOpenApi();
+            .Produces<VirtualizeResponse<BookDetailsDto>>(StatusCodes.Status200OK)
+            .RequireAuthorization()
+            .WithOpenApi();
 
 
 
@@ -116,7 +120,9 @@ namespace BookStoreApp.API.Endpoints
 
                 return TypedResults.NoContent();
             })
-           .WithOpenApi();
+            .Produces(StatusCodes.Status204NoContent)
+            .RequireAuthorization()
+            .WithOpenApi();
 
 
             group.MapPost("", async Task<IResult> (BookCreateDto bookDto, HttpContext context, IBooksRepository booksRepository, IFileService fileService, IOptions<StorageOptions> storageOptions, IMapper _mapper, ILogger<BooksApi> logger) =>
@@ -140,7 +146,9 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
-           .WithOpenApi();
+            .Produces<Book>(StatusCodes.Status201Created)
+            .RequireAuthorization()
+            .WithOpenApi();
 
 
             group.MapDelete("{id:int}", async Task<IResult> (int id, IBooksRepository booksRepository, IMapper _mapper, ILogger<BooksApi> logger, HttpContext context) =>
@@ -164,6 +172,7 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
+           .Produces(StatusCodes.Status204NoContent)
            .RequireAuthorization(new AuthorizeAttribute { Roles = "Administrator" })
            .WithOpenApi();
 
