@@ -1,6 +1,8 @@
 using Blazored.LocalStorage;
 using BookStoreApp.Blazor.Server.Components;
+using BookStoreApp.Blazor.Server.Configurations;
 using BookStoreApp.Blazor.Server.Providers;
+using BookStoreApp.Blazor.Server.Services;
 using BookStoreApp.Blazor.Server.Services.Authentication;
 using BookStoreApp.Blazor.Server.Services.Base;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -16,8 +18,13 @@ builder.Services.AddHttpClient<IClient, Client>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiUrl"]);
 
 });
+builder.Services.AddAutoMapper(cfg => { cfg.LicenseKey = builder.Configuration["LuckyPennyLicense"]; }, typeof(MapperConfig));
+
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IBookService, BookService>();
+
 
 //builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
