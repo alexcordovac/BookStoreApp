@@ -8,23 +8,67 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
+
+        <h6 class="text-white text-center mt-3">Always will show</h6>
+        <hr class="mx-3"/>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <li class="bi bi-house-door-fill" aria-hidden="true"></li> Home
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                <li class="bi bi-plus-square-fill" aria-hidden="true"></li> Counter
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+                <li class="bi bi-list-nested" aria-hidden="true"></li> Weather
             </NavLink>
         </div>
+
+        <AuthorizeView>
+            <Authorized>
+                <h6 class="text-white text-center mt-3">Only when logged in</h6>
+                <hr class="mx-3" />
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link">
+                        <li class="bi bi-person-circle" aria-hidden="true"></li> @context.User?.Identity?.Name
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="users/logout">
+                        <li class="bi bi-box-arrow-left" aria-hidden="true"></li> Log Out
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="authors/">
+                        <li class="bi bi-person-vcard" aria-hidden="true"></li> Authors
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="books/">
+                        <li class="bi bi-book" aria-hidden="true"></li> Books
+                    </NavLink>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <h6 class="text-white text-center mt-3">Only when not logged in</h6>
+                <hr class="mx-3" />
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="users/register">
+                        <li class="bi bi-person-plus" aria-hidden="true"></li> Register
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="users/login">
+                        <li class="bi bi-box-arrow-in-right" aria-hidden="true"></li> Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
 </div>
 

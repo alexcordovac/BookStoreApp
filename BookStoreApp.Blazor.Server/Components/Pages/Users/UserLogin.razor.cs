@@ -2,7 +2,7 @@
 using BookStoreApp.Blazor.Server.Services.Base;
 using Microsoft.AspNetCore.Components;
 
-namespace BookStoreApp.Blazor.Server.Components.Pages.User
+namespace BookStoreApp.Blazor.Server.Components.Pages.Users
 {
     public partial class UserLogin
     {
