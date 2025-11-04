@@ -17,7 +17,7 @@ namespace BookStoreApp.API.Endpoints
     {
         public static IEndpointRouteBuilder MapBooksEndpoints(this IEndpointRouteBuilder endpointBuilder)
         {
-            var group = endpointBuilder.MapGroup("/books").WithTags("Books");
+            var group = endpointBuilder.MapGroup("/books").WithTags("Books").RequireAuthorization();
 
             group.MapGet("{id:int}", async Task<IResult> (int id, HttpContext context, IBooksRepository booksRepository, ILogger<BooksApi> logger) =>
             {
@@ -39,7 +39,6 @@ namespace BookStoreApp.API.Endpoints
             })
             .WithName("getBookById")
             .Produces<BookDetailsDto>(StatusCodes.Status200OK)
-            .RequireAuthorization()
             .WithOpenApi();
 
 
@@ -47,7 +46,7 @@ namespace BookStoreApp.API.Endpoints
             {
                 try
                 {
-                    var bookList = await booksRepository.GetAllAsync<BookDetailsDto>(queryParameters);
+                    var bookList = await booksRepository.GetAllAsync<BookReadOnlyDto>(queryParameters);
                     return TypedResults.Ok(bookList);
                 }
                 catch (Exception ex)
@@ -56,8 +55,7 @@ namespace BookStoreApp.API.Endpoints
                     return TypedResults.StatusCode(StatusCodes.Status500InternalServerError);
                 }
             })
-            .Produces<VirtualizeResponse<BookDetailsDto>>(StatusCodes.Status200OK)
-            .RequireAuthorization()
+            .Produces<VirtualizeResponse<BookReadOnlyDto>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
 
@@ -121,7 +119,6 @@ namespace BookStoreApp.API.Endpoints
                 return TypedResults.NoContent();
             })
             .Produces(StatusCodes.Status204NoContent)
-            .RequireAuthorization()
             .WithOpenApi();
 
 
@@ -147,7 +144,6 @@ namespace BookStoreApp.API.Endpoints
                 }
             })
             .Produces<Book>(StatusCodes.Status201Created)
-            .RequireAuthorization()
             .WithOpenApi();
 
 

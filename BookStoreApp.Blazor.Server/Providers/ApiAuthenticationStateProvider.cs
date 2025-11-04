@@ -17,28 +17,35 @@ namespace BookStoreApp.Blazor.Server.Providers
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
+            var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
-            var user = new ClaimsPrincipal(new ClaimsIdentity());
-            var savedToken = await localStorage.GetItemAsync<string>("accessToken");
-            if (savedToken == null)
+            try
             {
+                var user = new ClaimsPrincipal(new ClaimsIdentity());
+                var savedToken = await localStorage.GetItemAsync<string>("accessToken");
+                if (savedToken == null)
+                {
+                    return new AuthenticationState(user);
+                }
+
+                var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
+
+                if (tokenContent.ValidTo < DateTime.Now)
+                {
+                    await localStorage.RemoveItemAsync("accessToken");
+                    return new AuthenticationState(user);
+                }
+
+                var claims = await GetClaims();
+
+                user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
+
                 return new AuthenticationState(user);
             }
-
-            var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
-
-            if (tokenContent.ValidTo < DateTime.Now)
+            catch (Exception ex)
             {
-                await localStorage.RemoveItemAsync("accessToken");
-                return new AuthenticationState(user);
+                return new AuthenticationState(anonymous);
             }
-
-            var claims = await GetClaims();
-
-            user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
-
-            return new AuthenticationState(user);
-
         }
 
         public async Task LoggedIn()
