@@ -45,9 +45,11 @@ else
                         <td>@author.FirstName</td>
                         <td>@author.LastName</td>
                         <td>
-                            <a class="btn btn-primary" href="/authors/details"><i class="bi bi-card-heading"></i> Details</a>
-                            <a class="btn btn-warning" href="/authors/edit"><i class="bi bi-pencil-square"></i> Edit</a>
-                            <a class="btn btn-danger" href="/authors/delete"><i class="bi bi-trash"></i> Delete</a>
+                            <a class="btn btn-primary" href="/authors/details/@author.Id"><i class="bi bi-card-heading"></i> Details</a>
+                            <AuthorizeView Roles="Administrator">
+                                <a class="btn btn-warning" href="/authors/update/@author.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <a class="btn btn-danger" href="/authors/delete"><i class="bi bi-trash"></i> Delete</a>
+                            </AuthorizeView>
                         </td>
                     </tr>
                 }

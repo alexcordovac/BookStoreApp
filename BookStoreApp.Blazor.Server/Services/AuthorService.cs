@@ -59,6 +59,8 @@ namespace BookStoreApp.Blazor.Server.Services
             {
                 await GetBearerToken();
                 await client.AuthorsPUTAsync(id, author);
+
+                response.Success = true;
             }
             catch (ApiException exception)
             {
