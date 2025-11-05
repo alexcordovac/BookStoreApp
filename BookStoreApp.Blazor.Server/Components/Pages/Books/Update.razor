@@ -1,12 +1,12 @@
-﻿@page "/books/create/"
+﻿@page "/books/update/{id:int}"
 @attribute [Authorize(Roles = Roles.Administrator)]
 @inject IBookService bookService
 @inject IAuthorService authorService
 @inject NavigationManager navigationManager
 
-<h3>Create Book</h3>
+<h3>Edit Book</h3>
 
-<EditForm FormName="create-book-form" Model="Book" OnValidSubmit="HandleBookCreate">
+<EditForm Model="Book" OnValidSubmit="HandleBookUpdate">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group">
@@ -60,40 +60,43 @@
         </div>
     </div>
     <br />
-
     <div class="mt-3">
         <button class="btn btn-outline-secondary btn-block" @onclick="BackToList">
             <i class="bi bi-skip-backward-circle-fill px-2"></i>Back to List
         </button>
 
         <button type="submit" class="btn btn-primary btn-block">
-            <i class="bi bi-file-plus-fill px-2"></i>Create Book
+            <i class="bi bi-file-plus-fill px-2"></i>Update Book
         </button>
     </div>
 </EditForm>
 
+
 @code {
-    private BookCreateDto Book = new();
+
+    [Parameter]
+    public int id { get; set; }
+
+    private BookUpdateDto Book = new BookUpdateDto();
     private List<AuthorReadOnlyDto> Authors = new();
-    private string UploadFileWarning = string.Empty;
+
     private string img = string.Empty;
+    private string UploadFileWarning = string.Empty;
     private long maxFileSize = 1024 * 1024 * 5;
 
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        var response = await authorService.Get(new Models.QueryParameters { AllRows = true });
-        if (response.Success)
+        var bookResponse = await bookService.GetForUpdate(id);
+        if (bookResponse.Success)
         {
-            Authors = response.Data.Items.ToList();
+            Book = bookResponse.Data;
+            img = Book.Image;
         }
-    }
 
-    private async Task HandleBookCreate()
-    {
-        var response = await bookService.Create(Book);
-        if (response.Success)
+        var authorResponse = await authorService.Get(new Models.QueryParameters { AllRows = true });
+        if (authorResponse.Success)
         {
-            BackToList();
+            Authors = authorResponse.Data.Items.ToList();
         }
     }
 
@@ -104,15 +107,17 @@
         {
             if (file.Size > maxFileSize)
             {
-                UploadFileWarning = "Please select a valid image file (*.jpg | *.png)";
-
+                UploadFileWarning = "Theis file is too big for upload";
+                return;
             }
+
             var ext = System.IO.Path.GetExtension(file.Name);
             if ((ext.ToLower().Contains("jpg") || ext.ToLower().Contains("png") || ext.ToLower().Contains("jpeg")) == false)
             {
                 UploadFileWarning = "Please select a valid image file (*.jpg | *.png)";
                 return;
             }
+
             var byteArray = new byte[file.Size];
             await file.OpenReadStream().ReadAsync(byteArray);
             string imageType = file.ContentType;
@@ -124,8 +129,18 @@
         }
     }
 
+    private async Task HandleBookUpdate()
+    {
+        var response = await bookService.Edit(id, Book);
+        if (response.Success)
+        {
+            BackToList();
+        }
+    }
+
     private void BackToList()
     {
         navigationManager.NavigateTo("/books/");
     }
+
 }
