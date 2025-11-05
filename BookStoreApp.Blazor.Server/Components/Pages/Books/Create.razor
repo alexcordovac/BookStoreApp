@@ -2,7 +2,7 @@
 @attribute [Authorize(Roles = Roles.Administrator)]
 @inject IBookService bookService
 @inject IAuthorService authorService
-@inject NavigationManager navManager
+@inject NavigationManager navigationManager
 
 <h3>Create Book</h3>
 
@@ -60,14 +60,16 @@
         </div>
     </div>
     <br />
-    <button class="btn btn-primary" type="submit">
-        <span class="oi oi-pencil"></span>
-        Create Book
-    </button>
-    <button @onclick="BackToList" class="btn btn-outline-secondary" type="button">
-        <span class="oi oi-media-skip-backward"></span>
-        Back To List
-    </button>
+
+    <div class="mt-3">
+        <button class="btn btn-primary btn-block" @onclick="BackToList">
+            <i class="bi bi-skip-backward-circle-fill px-2"></i>Back to List
+        </button>
+
+        <button type="submit" class="btn btn-outline-secondary btn-block">
+            <i class="bi bi-file-plus-fill px-2"></i>Create Book
+        </button>
+    </div>
 </EditForm>
 
 @code {
@@ -124,6 +126,6 @@
 
     private void BackToList()
     {
-        navManager.NavigateTo("/books/");
+        navigationManager.NavigateTo("/books/");
     }
 }
