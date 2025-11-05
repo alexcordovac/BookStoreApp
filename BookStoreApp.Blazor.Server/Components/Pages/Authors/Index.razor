@@ -1,6 +1,7 @@
 ﻿@page "/authors/"
 @using BookStoreApp.Blazor.Server.Models
 @inject IAuthorService authorService
+@inject IJSRuntime js
 
 @* @attribute [Authorize] *@
 
@@ -48,7 +49,7 @@ else
                             <a class="btn btn-primary" href="/authors/details/@author.Id"><i class="bi bi-card-heading"></i> Details</a>
                             <AuthorizeView Roles="Administrator">
                                 <a class="btn btn-warning" href="/authors/update/@author.Id"><i class="bi bi-pencil-square"></i> Edit</a>
-                                <a class="btn btn-danger" href="/authors/delete"><i class="bi bi-trash"></i> Delete</a>
+                                <button class="btn btn-danger" @onclick="() => Delete(author.Id)"><i class="bi bi-trash"></i> Delete</button>
                             </AuthorizeView>
                         </td>
                     </tr>
@@ -68,6 +69,20 @@ else
         if (response.Success)
         {
             Authors = response.Data.Items.ToList();
+        }
+    }
+
+    private async Task Delete(int authorId)
+    {
+        var author = Authors.First(q => q.Id == authorId);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Are You Sure You Want To Delete {author.FirstName} {author.LastName}?");
+        if (confirm)
+        {
+            var response = await authorService.Delete(authorId);
+            if (response.Success)
+            {
+                await OnInitializedAsync();
+            }
         }
     }
 }
