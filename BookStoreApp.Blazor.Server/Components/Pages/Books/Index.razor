@@ -1,7 +1,98 @@
 ﻿@page "/books/"
 
+@using BookStoreApp.Blazor.Server.Models
+@inject IBookService bookService
+@inject IJSRuntime js
+
+@* @attribute [Authorize] *@
+
 <h3>Index</h3>
 
+
+@if (response.Success == false)
+{
+    <div class="alert alert-danger">
+        <h4>@response.Message</h4>
+    </div>
+}
+else
+{
+    @if (Books is null)
+    {
+        <div class="alert alert-info">
+            <h4>
+                Loading data...
+            </h4>
+        </div>
+    }
+    else
+    {
+        <AuthorizeView>
+            <a class="btn btn-dark" href="/authors/create">Create</a>
+        </AuthorizeView>
+
+        <br />
+
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Price Name</th>
+                    <th>Author Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Books)
+                {
+                    <tr>
+                        <td>@book.Id</td>
+                        <td>
+                            <img src="@book.Image" width="100" height="100" alt="@book.Title" />
+                        </td>
+                        <td>@book.Title</td>
+                        <td>@book.Price.ToString("C")</td>
+                        <td><a class="btn btn-link" href="/authors/details/@book.AuthorId">@book.AuthorName </a></td>
+                        <td>
+                            <a class="btn btn-primary" href="/books/details/@book.Id"><i class="bi bi-card-heading"></i> Details</a>
+                            <AuthorizeView Roles="Administrator">
+                                <a class="btn btn-warning" href="/books/update/@book.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <button class="btn btn-danger" @onclick="() => Delete(book.Id)"><i class="bi bi-trash"></i> Delete</button>
+                            </AuthorizeView>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
 @code {
-    
+    private Response<BookReadOnlyDtoVirtualizeResponse> response = new Response<BookReadOnlyDtoVirtualizeResponse> { Success = true };
+    private List<BookReadOnlyDto> Books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        response = await bookService.Get(new QueryParameters { AllRows = true });
+        if (response.Success)
+        {
+            Books = response.Data.Items.ToList();
+        }
+    }
+
+    private async Task Delete(int bookId)
+    {
+        var book = Books.First(q => q.Id == bookId);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Are You Sure You Want To Delete {book.Title}?");
+        if (confirm)
+        {
+            var response = await bookService.Delete(bookId);
+            if (response.Success)
+            {
+                await OnInitializedAsync();
+            }
+        }
+    }
 }
